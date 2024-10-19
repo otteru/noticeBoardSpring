@@ -5,11 +5,11 @@ import hello.noticeboard.post.PostRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -35,10 +35,29 @@ public class MyController {
         return "post";
     }
 
-    @GetMapping("/write")
-    public String write() {
-        return "write";
+    @GetMapping("/add")
+    public String addForm(Model model) {
+        model.addAttribute("post", new Post());
+        return "addForm";
     }
+
+    @PostMapping("/add")
+    public String addPost(@ModelAttribute Post post, RedirectAttributes redirectAttributes) {
+
+        log.info("Post={}", post);
+
+        Post savedPost = postRepository.save(post);
+        redirectAttributes.addAttribute("postId", savedPost.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/noticeBoard/posts/{postId}";
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePost(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        postRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
 
     // test data
     @PostConstruct

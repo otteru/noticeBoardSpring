@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <title>게시판</title>
     <link th:href="@{/css/bootstrap.min.css}"
           href="../css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -14,7 +15,7 @@
     <div class="row">
         <div class="col">
             <button class="btn btn-primary float-end"
-                    th:onclick="|location.href='@{/noticeBoard/posts/write}'|"
+                    th:onclick="|location.href='@{/noticeBoard/posts/add}'|"
                     type="button">새글 작성
             </button>
         </div>
