@@ -52,11 +52,33 @@ public class MyController {
         return "redirect:/noticeBoard/posts/{postId}";
     }
 
+    @GetMapping("/update/{id}")
+    public String updateForm(@PathVariable("id") Long id, Model model) {
+        Post post = postRepository.findById(id);
+        model.addAttribute("post", post);
+        return "updateForm";
+    }
+
+    @PostMapping("/update/{id}")
+    public String updatePost(@ModelAttribute Post post, RedirectAttributes redirectAttributes) {
+
+        log.info("Post={}", post);
+
+        Long id = post.getId();
+        postRepository.update(id, post);
+        redirectAttributes.addAttribute("postId", id);
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/noticeBoard/posts/{postId}";
+    }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePost(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         postRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
+
+
 
 
     // test data
