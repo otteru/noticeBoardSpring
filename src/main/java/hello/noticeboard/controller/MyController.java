@@ -5,6 +5,7 @@ import hello.noticeboard.post.PostRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,34 +53,37 @@ public class MyController {
         return "redirect:/noticeBoard/posts/{postId}";
     }
 
-    @GetMapping("/update/{id}")
-    public String updateForm(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/edit/{id}")
+    public String editForm(@PathVariable("id") Long id, Model model) {
+
+        log.info("edit id={}", id);
+
         Post post = postRepository.findById(id);
         model.addAttribute("post", post);
-        return "updateForm";
+        return "editForm";
     }
 
-    @PostMapping("/update/{id}")
-    public String updatePost(@ModelAttribute Post post, RedirectAttributes redirectAttributes) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editPost(@PathVariable("id") Long id, @RequestBody Post post) {
 
-        log.info("Post={}", post);
+        log.info("Updating post with id={}, data={}", id, post);
 
-        Long id = post.getId();
+        Post existingPost = postRepository.findById(id);
+        if (existingPost == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        log.info("hello");
+
         postRepository.update(id, post);
-        redirectAttributes.addAttribute("postId", id);
-        redirectAttributes.addAttribute("status", true);
-        return "redirect:/noticeBoard/posts/{postId}";
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
-
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePost(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<?> deletePost(@PathVariable("id") Long id) {
         postRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
-
-
-
 
     // test data
     @PostConstruct

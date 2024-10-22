@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 수정</title>
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container" style="max-width: 600px">
+    <div class="py-5 text-center">
+        <form th:object="${post}">
+            <div class="mb-3">
+                <label for="title" class="form-label">제목</label>
+                <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="제목을 입력하세요">
+            </div>
+            <div  class="mb-3">
+                <label for="body" class="form-label">내용</label>
+                <textarea class="form-control" id="body" th:field="*{body}" rows="10" placeholder="내용을 입력하세요"></textarea>
+            </div>
+            <hr class="my-4">
+
+            <div class="float-end">
+                <a th:href="@{/noticeBoard/posts}" class="btn btn-secondary me-2">돌아가기</a>
+                <button class="btn btn-primary"
+                        type="button"
+                        th:onclick= "editPost([[*{id}]])">수정
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    function editPost(postId){
+        if(confirm("수정하시겠습니까?")) {
+
+            const titleValue = document.getElementById('title').value;
+            const bodyValue = document.getElementById('body').value;
+
+            fetch(`/noticeBoard/posts/${postId}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: postId,
+                    title: titleValue,
+                    body: bodyValue
+                })
+            })
+                .then(response => {
+                    if(!response.ok){
+                        throw new Error("서버 응답이 실패했습니다.");
+                    }
+                    return response.text();
+                })
+                .then(() => {
+                    alert("글이 성공적으로 수정되었습니다.");
+                    window.location.href = `/noticeBoard/posts/${postId}`;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('글 수정 중 오류가 발생했습니다: ' + error.message);
+                });
+        }
+        return false;
+    }
+
+</script>
+</body>
+</html>
