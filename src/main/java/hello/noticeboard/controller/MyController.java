@@ -5,6 +5,8 @@ import hello.noticeboard.post.PostRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,31 +30,36 @@ public class MyController {
         model.addAttribute("posts", posts);
         return "posts";
     }
-    
+
+    // read
     @GetMapping("/{id}")
     public String post(@PathVariable("id") Long id, Model model) {
         Post post = postRepository.findById(id);
+
+        log.info("Read Post={}", post);
+
         model.addAttribute("post", post);
         return "post";
     }
 
+    //  add
     @GetMapping("/add")
     public String addForm(Model model) {
         model.addAttribute("post", new Post());
         return "addForm";
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public String addPost(@ModelAttribute Post post, RedirectAttributes redirectAttributes) {
-
-        log.info("Post={}", post);
+        log.info("Create Post={}", post);
 
         Post savedPost = postRepository.save(post);
         redirectAttributes.addAttribute("postId", savedPost.getId());
-        redirectAttributes.addAttribute("status", true);
+
         return "redirect:/noticeBoard/posts/{postId}";
     }
 
+    // edit
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable("id") Long id, Model model) {
 
@@ -73,12 +80,11 @@ public class MyController {
             return ResponseEntity.notFound().build();
         }
 
-        log.info("hello");
-
         postRepository.update(id, post);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    // delete
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePost(@PathVariable("id") Long id) {
         postRepository.deleteById(id);
