@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>게시판</title>
+    <title th:text="#{page.posts}">게시판</title>
     <link th:href="@{/css/bootstrap.min.css}"
           href="../css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -10,11 +10,11 @@
 
 <div class="container" style="max-width: 600px">
     <div class="py-5 text-center">
-        <h2> 글 목록 </h2>
+        <h2 th:text="#{header.list}"> 글 목록 </h2>
     </div>
     <div class="row">
         <div class="col">
-            <a href="addForm.html" th:href="@{/noticeBoard/posts/add}" class="btn btn-primary float-end">새글 작성</a>
+            <a href="addForm.html" th:href="@{/noticeBoard/posts/add}" class="btn btn-primary float-end" th:text="#{button.add}">새글 작성</a>
         </div>
     </div>
     <hr class="my-4">
@@ -22,8 +22,8 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>글 제목</th>
+                    <th th:text="#{label.post.id}">ID</th>
+                    <th th:text="#{label.post.title}">글 제목</th>
                 </tr>
             </thead>
             <tbody>

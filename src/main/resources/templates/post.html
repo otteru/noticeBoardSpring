@@ -25,19 +25,20 @@
         <div class="row">
             <div class="col">
                 <div class="float-end">
-                    <a th:href="@{/noticeBoard/posts}" class="btn btn-secondary me-2">돌아가기</a>
-                    <a th:href="@{/noticeBoard/posts/edit/{id}(id=${post.id})}" class="btn btn-primary me-2">글 수정</a>
+                    <a th:href="@{/noticeBoard/posts}" class="btn btn-secondary me-2" th:text="#{button.back}">돌아가기</a>
+                    <a th:href="@{/noticeBoard/posts/edit/{id}(id=${post.id})}" class="btn btn-primary me-2" th:text="#{button.edit}">글 수정</a>
                     <!-- 삭제 버튼 수정 -->
                     <button class="btn btn-danger"
                             th:onclick= "deletePost([[${post.id}]])"
-                            type="button">글 삭제
+                            type="button"
+                            th:text="#{button.delete}">글 삭제
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-
+<!--삭제 작업은 데이터를 제출하는 것이 아니라 서버에 특정 리소스를 삭제하라는 요청을 보내는 것이므로, AJAX만으로 처리-->
     <script th:inline="javascript">
         function deletePost(postId) {
             if(confirm("정말로 이 글을 삭제하시겠습니까?")) {
@@ -63,3 +64,4 @@
     </script>
     </body>
     </html>
+

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller// 컨트롤러로 등록해준다.
@@ -50,13 +51,12 @@ public class MyController {
     }
 
     @PostMapping
-    public String addPost(@ModelAttribute Post post, RedirectAttributes redirectAttributes) {
-        log.info("Create Post={}", post);
+    public ResponseEntity<?> addPost(@RequestBody Post post) {
+
+        log.info("add Post with title={}", post.getTitle());
 
         Post savedPost = postRepository.save(post);
-        redirectAttributes.addAttribute("postId", savedPost.getId());
-
-        return "redirect:/noticeBoard/posts/{postId}";
+        return ResponseEntity.ok().body(Map.of("id", savedPost.getId()));
     }
 
     // edit
@@ -73,16 +73,18 @@ public class MyController {
     @PutMapping("/{id}")
     public ResponseEntity<?> editPost(@PathVariable("id") Long id, @RequestBody Post post) {
 
-        log.info("Updating post with id={}, data={}", id, post);
-
         Post existingPost = postRepository.findById(id);
         if (existingPost == null) {
             return ResponseEntity.notFound().build();
         }
 
+        log.info("Updating post with id={}, title={}", id, post.getTitle());
+
         postRepository.update(id, post);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok().body(Map.of("success", true));
     }
+
+
 
     // delete
     @DeleteMapping("/{id}")

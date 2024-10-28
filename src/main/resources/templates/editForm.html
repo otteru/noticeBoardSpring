@@ -2,30 +2,28 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>게시글 수정</title>
+    <title th:text="#{page.editItem}">게시글 수정</title>
     <link th:href="@{/css/bootstrap.min.css}"
           href="../css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container" style="max-width: 600px">
     <div class="py-5 text-center">
-        <form th:object="${post}">
+        <form id="editForm" th:action="@{|/noticeBoard/posts/${post.id}|}" th:object="${post}" method="post">
+            <input type="hidden" name="_method" value="PATCH" />
             <div class="mb-3">
-                <label for="title" class="form-label">제목</label>
-                <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="제목을 입력하세요">
+                <label for="title" class="form-label" th:text="#{label.post.title}">제목</label>
+                <input type="text" class="form-control" id="title" th:field="*{title}" th:placeholder="#{input.title}">
             </div>
             <div  class="mb-3">
-                <label for="body" class="form-label">내용</label>
-                <textarea class="form-control" id="body" th:field="*{body}" rows="10" placeholder="내용을 입력하세요"></textarea>
+                <label for="body" class="form-label" th:text="#{label.post.body}">내용</label>
+                <textarea class="form-control" id="body" th:field="*{body}" rows="10" th:placeholder="#{input.body}"></textarea>
             </div>
             <hr class="my-4">
 
             <div class="float-end">
-                <a th:href="@{/noticeBoard/posts}" class="btn btn-secondary me-2">돌아가기</a>
-                <button class="btn btn-primary"
-                        type="button"
-                        th:onclick= "editPost([[*{id}]])">수정
-                </button>
+                <a th:href="@{/noticeBoard/posts}" class="btn btn-secondary me-2" th:text="#{button.back}">돌아가기</a>
+                <button class="btn btn-primary" type="submit" th:text="#{button.edit}">수정</button>
             </div>
 
         </form>
@@ -33,9 +31,11 @@
 </div>
 
 <script th:inline="javascript">
-    function editPost(postId){
-        if(confirm("수정하시겠습니까?")) {
+    document.getElementById('editForm').addEventListener('submit', function(e){
+        e.preventDefault(); // 폼의 기본 제출 동작을 막습니다
 
+        if(confirm("수정하시겠습니까?")) {
+            const postId = /*[[${post.id}]]*/ 'defaultId';
             const titleValue = document.getElementById('title').value;
             const bodyValue = document.getElementById('body').value;
 
@@ -43,6 +43,7 @@
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: JSON.stringify({
                     id: postId,
@@ -54,7 +55,7 @@
                     if(!response.ok){
                         throw new Error("서버 응답이 실패했습니다.");
                     }
-                    return response.text();
+                    return response.json();
                 })
                 .then(() => {
                     alert("글이 성공적으로 수정되었습니다.");
@@ -65,7 +66,7 @@
                     alert('글 수정 중 오류가 발생했습니다: ' + error.message);
                 });
         }
-    }
+    });
 
 </script>
 </body>
