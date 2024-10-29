@@ -1,5 +1,6 @@
 package hello.noticeboard.controller;
 
+import hello.noticeboard.PostValidator;
 import hello.noticeboard.post.Post;
 import hello.noticeboard.post.PostRepository;
 import jakarta.annotation.PostConstruct;
@@ -11,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -24,6 +28,12 @@ import java.util.Map;
 public class MyController {
 
     private final PostRepository postRepository;
+    private final PostValidator postValidator;
+
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+        dataBinder.addValidators(postValidator);
+    }
 
     @GetMapping
     public String home(Model model) {
@@ -51,9 +61,14 @@ public class MyController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addPost(@RequestBody Post post) {
+    public ResponseEntity<?> addPost(@Validated @RequestBody Post post, BindingResult bindingResult) {
 
         log.info("add Post with title={}", post.getTitle());
+
+        // 검증에 실패하면 다시 입력 폼으로 back
+        if(bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+        }
 
         Post savedPost = postRepository.save(post);
         return ResponseEntity.ok().body(Map.of("id", savedPost.getId()));
