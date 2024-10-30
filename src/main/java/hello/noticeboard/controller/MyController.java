@@ -18,6 +18,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,11 +69,15 @@ public class MyController {
         // 검증에 실패하면 다시 입력 폼으로 back
         if(bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
+            Map<String, Object> response = new HashMap<>();
+            response.put("errors", bindingResult.getAllErrors());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         Post savedPost = postRepository.save(post);
         return ResponseEntity.ok().body(Map.of("id", savedPost.getId()));
     }
+
 
     // edit
     @GetMapping("/edit/{id}")

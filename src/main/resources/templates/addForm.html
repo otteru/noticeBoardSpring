@@ -5,6 +5,15 @@
     <title th:text="#{page.addItem}">게시글 작성</title>
     <link th:href="@{/css/bootstrap.min.css}"
           href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
 </head>
 <body>
 <div class="container" style="max-width: 600px">
@@ -13,10 +22,12 @@
             <div class="mb-3">
                 <label for="title" class="form-label" th:text="#{label.post.title}">제목</label>
                 <input type="text" class="form-control" id="title" th:field="*{title}" th:placeholder="#{input.title}">
+                <div class="field-error title"></div>
             </div>
             <div  class="mb-3">
                 <label for="body" class="form-label" th:text="#{label.post.body}">내용</label>
                 <textarea class="form-control" id="body" th:field="*{body}" rows="10" th:placeholder="#{input.body}"></textarea>
+                <div class="field-error body"></div>
             </div>
             <hr class="my-4">
 
@@ -31,43 +42,11 @@
     </div>
 </div>
 
-<script th:inline="javascript">
-    document.getElementById("addForm").addEventListener("submit", function(e) {
-        e.preventDefault();
-
-        if(confirm("제출하시겠습니까?")) {
-            const titleValue = document.getElementById('title').value;
-            const bodyValue = document.getElementById('body').value;
-
-            fetch("/noticeBoard/posts", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({
-                    title: titleValue,
-                    body: bodyValue
-                })
-            })
-                .then(response => {
-                    if(!response.ok){
-                        throw new Error("서버 응답이 실패했습니다.");
-                    }
-                    return response.json(); //서버의 json응답 파싱
-                })
-                .then(data => {
-                    alert("글이 성공적으로 저장되었습니다.");
-                    window.location.href = `/noticeBoard/posts/${data.id}`;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('글 수정 중 오류가 발생했습니다: ' + error.message);
-                });
-        }
-
-    })
-</script>
+<footer th:replace="~{fragment/footer :: footer(~{::js})}">
+    <th:block th:fragment="js">
+        <script src="/js/addForm.js"></script>
+    </th:block>
+</footer>
 
 </body>
 </html>

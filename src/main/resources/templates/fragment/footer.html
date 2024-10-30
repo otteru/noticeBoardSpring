@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<footer class="footer" th:fragment="footer(js)">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <th:block th:insert="${js}"/>
+
+</footer>
