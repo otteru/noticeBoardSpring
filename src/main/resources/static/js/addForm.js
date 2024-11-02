@@ -5,6 +5,9 @@ document.getElementById("addForm").addEventListener("submit", function(e) {
         const titleValue = document.getElementById('title').value;
         const bodyValue = document.getElementById('body').value;
 
+        // 기존 에러 메시지 초기화
+        document.querySelectorAll('.field-error').forEach(el => el.textContent = '');
+
         fetch("/noticeBoard/posts", {
             method: "POST",
             headers: {
@@ -17,30 +20,31 @@ document.getElementById("addForm").addEventListener("submit", function(e) {
             })
         })
             .then(response => {
-                if(response.ok){
-                    alert("글이 성공적으로 저장되었습니다.");
+                if(response.ok) {
+                    return response.json().then(data => {
+                        alert("글이 성공적으로 저장되었습니다.");
+                        window.location.href = `/noticeBoard/posts/${data.id}`;
+                    });
+                } else {
+                    return response.json();
                 }
-                return response.json();
             })
             .then(data => {
                 if(data.errors) {
                     data.errors.forEach(err => {
-                        let fieldName = err.field || "gloabal";
-                        let errorDiv = document.querySelector(`.field-error[data-field="${fieldName}"]`);
+                        let errorDiv = document.querySelector(`.field-error.${err.field}`);
                         if(errorDiv) {
                             errorDiv.textContent = err.codes[0] || err.defaultMessage;
                         }
-                    })
-                }else{
-                    alert('글 저장 중 오류가 발생했습니다: ' + error.message);
+                    });
+                } else {
+                    console.error('Error:', data);
+                    alert('글 저장 중 오류가 발생했습니다.');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('글 수정 중 오류가 발생했습니다: ' + error.message);
+                alert('글 저장 중 오류가 발생했습니다: ' + error.message);
             });
     }
-
-
-})
-
+});

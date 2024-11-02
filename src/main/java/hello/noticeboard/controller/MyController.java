@@ -68,7 +68,7 @@ public class MyController {
 
         // 검증에 실패하면 다시 입력 폼으로 back
         if(bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult);
+            log.info("errors={}", bindingResult.getAllErrors().get(0));
             Map<String, Object> response = new HashMap<>();
             response.put("errors", bindingResult.getAllErrors());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
