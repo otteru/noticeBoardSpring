@@ -1,5 +1,6 @@
 package hello.noticeboard.controller;
 
+import hello.noticeboard.ErrorResult;
 import hello.noticeboard.PostValidator;
 import hello.noticeboard.post.Post;
 import hello.noticeboard.post.PostRepository;
@@ -7,6 +8,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Slf4j
@@ -30,6 +33,7 @@ public class MyController {
 
     private final PostRepository postRepository;
     private final PostValidator postValidator;
+    private final MessageSource messageSource;
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
@@ -68,10 +72,11 @@ public class MyController {
 
         // 검증에 실패하면 다시 입력 폼으로 back
         if(bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult.getAllErrors().get(0));
-            Map<String, Object> response = new HashMap<>();
-            response.put("errors", bindingResult.getAllErrors());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            log.info("errors={}", bindingResult);
+            ErrorResult errorResult = new ErrorResult(bindingResult, messageSource, Locale.getDefault());
+
+            log.info("errorResult={}", errorResult);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
         }
 
         Post savedPost = postRepository.save(post);

@@ -30,16 +30,14 @@ document.getElementById("addForm").addEventListener("submit", function(e) {
                 }
             })
             .then(data => {
-                if(data.errors) {
-                    data.errors.forEach(err => {
-                        let errorDiv = document.querySelector(`.field-error.${err.field}`);
-                        if(errorDiv) {
-                            errorDiv.textContent = err.codes[0] || err.defaultMessage;
-                        }
+                console.log("data: ",data);
+                if(data.errorDetails && data.errorDetails.length > 0) {
+                    data.errorDetails.forEach(err => {
+                        console.log("hello");
                     });
-                } else {
+                }else {
                     console.error('Error:', data);
-                    alert('글 저장 중 오류가 발생했습니다.');
+                    alert('글 저장 오류가 발생했습니다.');
                 }
             })
             .catch(error => {
