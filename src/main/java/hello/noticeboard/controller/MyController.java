@@ -1,15 +1,13 @@
 package hello.noticeboard.controller;
 
-import hello.noticeboard.ErrorResult;
-import hello.noticeboard.PostValidator;
+import hello.noticeboard.validation.ErrorResult;
+import hello.noticeboard.validation.PostValidator;
 import hello.noticeboard.post.Post;
 import hello.noticeboard.post.PostRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,9 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;

@@ -30,13 +30,16 @@ document.getElementById("addForm").addEventListener("submit", function(e) {
                 }
             })
             .then(data => {
+                console.log("data: ", data);
                 if(data.errorDetails && data.errorDetails.length > 0) {
                     data.errorDetails.forEach(err => {
                         console.log("err: ", err);
                         let errorDiv = document.querySelector(`.field-error.${err.field}`);
-                        console.log("errorDiv", errorDiv);
+                        let errorInput = document.querySelector(`.form-control.${err.field}`);
+                        console.log("errorInput", errorInput);
                         if(errorDiv) {
                             errorDiv.textContent = err.message;
+                            errorInput.classList.add("field-error");
                         }
                     });
                 }else {

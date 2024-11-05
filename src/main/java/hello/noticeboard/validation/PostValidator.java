@@ -1,4 +1,4 @@
-package hello.noticeboard;
+package hello.noticeboard.validation;
 
 import hello.noticeboard.post.Post;
 import org.springframework.stereotype.Component;

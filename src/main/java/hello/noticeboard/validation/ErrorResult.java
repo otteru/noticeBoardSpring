@@ -1,4 +1,4 @@
-package hello.noticeboard;
+package hello.noticeboard.validation;
 
 import lombok.AccessLevel;
 import lombok.Builder;
