@@ -30,13 +30,17 @@ document.getElementById("addForm").addEventListener("submit", function(e) {
                 }
             })
             .then(data => {
-                console.log("data: ",data);
                 if(data.errorDetails && data.errorDetails.length > 0) {
                     data.errorDetails.forEach(err => {
-                        console.log("hello");
+                        console.log("err: ", err);
+                        let errorDiv = document.querySelector(`.field-error.${err.field}`);
+                        console.log("errorDiv", errorDiv);
+                        if(errorDiv) {
+                            errorDiv.textContent = err.message;
+                        }
                     });
                 }else {
-                    console.error('Error:', data);
+                    console.error('Errorr:', data);
                     alert('글 저장 오류가 발생했습니다.');
                 }
             })
