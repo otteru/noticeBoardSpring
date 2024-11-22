@@ -52,7 +52,7 @@
             const bodyValue = document.getElementById('body').value;
 
             fetch(`/noticeBoard/posts/${postId}`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
@@ -71,7 +71,7 @@
                 })
                 .then(data => {
                     alert("글이 성공적으로 수정되었습니다.");
-                    window.location.href = `/noticeBoard/posts/${id}`;
+                    window.location.href = `/noticeBoard/posts/${postId}`;
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -90,7 +90,6 @@
                 });
         }
     });
-
 </script>
 </body>
 </html>

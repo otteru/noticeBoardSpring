@@ -74,7 +74,7 @@ public class MyController {
         return "editForm";
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<?> editPost(@Validated @RequestBody Post post,@PathVariable("id") Long id, BindingResult bindingResult) {
 
         Post existingPost = postRepository.findById(id);
