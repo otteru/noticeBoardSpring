@@ -61,6 +61,42 @@ public class MyController {
         return "addForm";
     }
 
+
+
+    // edit
+    @GetMapping("/edit/{id}")
+    public String editForm(@PathVariable("id") Long id, Model model) {
+
+        log.info("edit id={}", id);
+
+        Post post = postRepository.findById(id);
+        model.addAttribute("post", post);
+        return "editForm";
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editPost(@Validated @RequestBody Post post,@PathVariable("id") Long id, BindingResult bindingResult) {
+
+        Post existingPost = postRepository.findById(id);
+        if (existingPost == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // 검증에 실패하면 다시 입력 폼으로 back
+        if(bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            ErrorResult errorResult = new ErrorResult(bindingResult, messageSource, Locale.getDefault());
+
+            log.info("errorResult={}", errorResult);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
+        }
+
+        log.info("Updating post with id={}, title={}", id, post.getTitle());
+
+        postRepository.update(id, post);
+        return ResponseEntity.ok().body(Map.of("success", true));
+    }
+
     @PostMapping
     public ResponseEntity<?> addPost(@Validated @RequestBody Post post, BindingResult bindingResult) {
 
@@ -78,33 +114,6 @@ public class MyController {
         Post savedPost = postRepository.save(post);
         return ResponseEntity.ok().body(Map.of("id", savedPost.getId()));
     }
-
-
-    // edit
-    @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable("id") Long id, Model model) {
-
-        log.info("edit id={}", id);
-
-        Post post = postRepository.findById(id);
-        model.addAttribute("post", post);
-        return "editForm";
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> editPost(@PathVariable("id") Long id, @RequestBody Post post) {
-
-        Post existingPost = postRepository.findById(id);
-        if (existingPost == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        log.info("Updating post with id={}, title={}", id, post.getTitle());
-
-        postRepository.update(id, post);
-        return ResponseEntity.ok().body(Map.of("success", true));
-    }
-
 
 
     // delete

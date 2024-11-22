@@ -20,36 +20,29 @@ document.getElementById("addForm").addEventListener("submit", function(e) {
             })
         })
             .then(response => {
-                if(response.ok) {
-                    return response.json().then(data => {
-                        alert("글이 성공적으로 저장되었습니다.");
-                        window.location.href = `/noticeBoard/posts/${data.id}`;
-                    });
-                } else {
-                    return response.json();
+                if (!response.ok) {
+                    return response.json().then(errorData => Promise.reject(errorData));
                 }
+                return response.json();
             })
             .then(data => {
-                console.log("data: ", data);
-                if(data.errorDetails && data.errorDetails.length > 0) {
-                    data.errorDetails.forEach(err => {
-                        console.log("err: ", err);
+                alert("글이 성공적으로 저장되었습니다.");
+                window.location.href = `/noticeBoard/posts/${data.id}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (error.errorDetails && error.errorDetails.length > 0) {
+                    error.errorDetails.forEach(err => {
                         let errorDiv = document.querySelector(`.field-error.${err.field}`);
                         let errorInput = document.querySelector(`.form-control.${err.field}`);
-                        console.log("errorInput", errorInput);
-                        if(errorDiv) {
+                        if (errorDiv) {
                             errorDiv.textContent = err.message;
                             errorInput.classList.add("field-error");
                         }
                     });
-                }else {
-                    console.error('Errorr:', data);
-                    alert('글 저장 오류가 발생했습니다.');
+                } else {
+                    alert('글 저장 중 오류가 발생했습니다: ' + (error.message || '알 수 없는 오류'));
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('글 저장 중 오류가 발생했습니다: ' + error.message);
             });
     }
 });
