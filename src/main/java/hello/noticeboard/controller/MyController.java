@@ -75,7 +75,9 @@ public class MyController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editPost(@Validated @RequestBody Post post,@PathVariable("id") Long id, BindingResult bindingResult) {
+    public ResponseEntity<?> editPost(@Validated @RequestBody Post post,BindingResult bindingResult, @PathVariable("id") Long id) {
+
+        log.info("post={}", post);
 
         Post existingPost = postRepository.findById(id);
         if (existingPost == null) {
@@ -86,6 +88,7 @@ public class MyController {
         if(bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             ErrorResult errorResult = new ErrorResult(bindingResult, messageSource, Locale.getDefault());
+
 
             log.info("errorResult={}", errorResult);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
