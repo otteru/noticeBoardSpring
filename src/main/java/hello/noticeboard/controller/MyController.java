@@ -28,13 +28,13 @@ import java.util.Map;
 public class MyController {
 
     private final PostRepository postRepository;
-    private final PostValidator postValidator;
+    //private final PostValidator postValidator;
     private final MessageSource messageSource;
 
-    @InitBinder
-    public void initBinder(WebDataBinder dataBinder) {
-        dataBinder.addValidators(postValidator);
-    }
+    //@InitBinder
+    //public void initBinder(WebDataBinder dataBinder) {
+    //    dataBinder.addValidators(postValidator);
+    //}
 
     @GetMapping
     public String home(Model model) {
@@ -61,7 +61,23 @@ public class MyController {
         return "addForm";
     }
 
+    @PostMapping
+    public ResponseEntity<?> addPost(@Validated @RequestBody Post post, BindingResult bindingResult) {
 
+        log.info("add Post with title={}", post.getTitle());
+
+        // 검증에 실패하면 다시 입력 폼으로 back
+        if(bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            ErrorResult errorResult = new ErrorResult(bindingResult, messageSource, Locale.getDefault());
+
+            log.info("errorResult={}", errorResult);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
+        }
+
+        Post savedPost = postRepository.save(post);
+        return ResponseEntity.ok().body(Map.of("id", savedPost.getId()));
+    }
 
     // edit
     @GetMapping("/edit/{id}")
@@ -98,24 +114,6 @@ public class MyController {
 
         postRepository.update(id, post);
         return ResponseEntity.ok().body(Map.of("success", true));
-    }
-
-    @PostMapping
-    public ResponseEntity<?> addPost(@Validated @RequestBody Post post, BindingResult bindingResult) {
-
-        log.info("add Post with title={}", post.getTitle());
-
-        // 검증에 실패하면 다시 입력 폼으로 back
-        if(bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult);
-            ErrorResult errorResult = new ErrorResult(bindingResult, messageSource, Locale.getDefault());
-
-            log.info("errorResult={}", errorResult);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
-        }
-
-        Post savedPost = postRepository.save(post);
-        return ResponseEntity.ok().body(Map.of("id", savedPost.getId()));
     }
 
 
