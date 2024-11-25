@@ -4,6 +4,8 @@ import hello.noticeboard.validation.ErrorResult;
 import hello.noticeboard.validation.PostValidator;
 import hello.noticeboard.post.Post;
 import hello.noticeboard.post.PostRepository;
+import hello.noticeboard.validation.form.PostEditForm;
+import hello.noticeboard.validation.form.PostSaveForm;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,9 +64,9 @@ public class MyController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addPost(@Validated @RequestBody Post post, BindingResult bindingResult) {
+    public ResponseEntity<?> addPost(@Validated @RequestBody PostSaveForm form, BindingResult bindingResult) {
 
-        log.info("add Post with title={}", post.getTitle());
+        log.info("add Post with title={}", form.getTitle());
 
         // 검증에 실패하면 다시 입력 폼으로 back
         if(bindingResult.hasErrors()) {
@@ -75,6 +77,9 @@ public class MyController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
         }
 
+        Post post = new Post();
+        post.setTitle(form.getTitle());
+        post.setBody(form.getBody());
         Post savedPost = postRepository.save(post);
         return ResponseEntity.ok().body(Map.of("id", savedPost.getId()));
     }
@@ -91,9 +96,9 @@ public class MyController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> editPost(@Validated @RequestBody Post post,BindingResult bindingResult, @PathVariable("id") Long id) {
+    public ResponseEntity<?> editPost(@Validated @RequestBody PostEditForm form, BindingResult bindingResult, @PathVariable("id") Long id) {
 
-        log.info("post={}", post);
+        log.info("form={}", form);
 
         Post existingPost = postRepository.findById(id);
         if (existingPost == null) {
@@ -110,8 +115,12 @@ public class MyController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
         }
 
-        log.info("Updating post with id={}, title={}", id, post.getTitle());
+        log.info("Updating post with id={}, title={}", id, form.getTitle());
 
+        Post post = new Post();
+        post.setId(form.getId());
+        post.setTitle(form.getTitle());
+        post.setBody(form.getBody());
         postRepository.update(id, post);
         return ResponseEntity.ok().body(Map.of("success", true));
     }
