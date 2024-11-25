@@ -49,9 +49,7 @@ public class MyController {
     @GetMapping("/{id}")
     public String post(@PathVariable("id") Long id, Model model) {
         Post post = postRepository.findById(id);
-
         log.info("Read Post={}", post);
-
         model.addAttribute("post", post);
         return "post";
     }

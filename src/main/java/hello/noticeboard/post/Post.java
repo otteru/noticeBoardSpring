@@ -11,11 +11,11 @@ public class Post {
 
     private Long id;
 
-    @NotBlank
+//    @NotBlank
     private String title;
 
-    @NotNull
-    @Size(min = 5, max = 400)
+//    @NotNull
+//    @Size(min = 5, max = 400)
     private String body;
 
     public Post(String title, String body) {
