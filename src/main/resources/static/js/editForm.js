@@ -32,10 +32,14 @@ document.getElementById('editForm').addEventListener('submit', function(e){
                 console.error('Error:', error);
                 if (error.errorDetails && error.errorDetails.length > 0) {
                     error.errorDetails.forEach(err => {
-                        let errorDiv = document.querySelector(`.field-error.${err.field}`);
+                        let errorDiv = document.querySelector(`.error-message.${err.field}`);
                         let errorInput = document.querySelector(`.form-control.${err.field}`);
                         if (errorDiv) {
+
+                            console.log('errorDiv: ', errorDiv);
+                            console.log('errorInput: ', errorInput);
                             errorDiv.textContent = err.message;
+                            errorDiv.classList.add("field-error");
                             errorInput.classList.add("field-error");
                         }
                     });

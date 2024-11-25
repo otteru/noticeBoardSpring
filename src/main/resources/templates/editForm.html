@@ -24,12 +24,12 @@
             <div class="mb-3">
                 <label for="title" class="form-label" th:text="#{label.post.title}">제목</label>
                 <input type="text" class="form-control title" id="title" th:field="*{title}" th:placeholder="#{input.title}">
-                <div class="field-error title"></div>
+                <div class="error-message title"></div>
             </div>
             <div  class="mb-3">
                 <label for="body" class="form-label" th:text="#{label.post.body}">내용</label>
                 <textarea class="form-control body" id="body" th:field="*{body}" rows="10" th:placeholder="#{input.body}"></textarea>
-                <div class="field-error body"></div>
+                <div class="error-message body">hello</div>
             </div>
             <hr class="my-4">
 
