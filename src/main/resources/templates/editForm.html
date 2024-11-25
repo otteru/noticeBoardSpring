@@ -20,6 +20,7 @@
     <div class="py-5 text-center">
         <form id="editForm" th:action="@{|/noticeBoard/posts/${post.id}|}" th:object="${post}" method="post">
             <input type="hidden" name="_method" value="PATCH" />
+            <input type="hidden" name="postId" th:value="${post.id}" id="postId" />
             <div class="mb-3">
                 <label for="title" class="form-label" th:text="#{label.post.title}">제목</label>
                 <input type="text" class="form-control title" id="title" th:field="*{title}" th:placeholder="#{input.title}">
@@ -42,54 +43,12 @@
 </div>
 
 
-<script>
-    document.getElementById('editForm').addEventListener('submit', function(e){
-        e.preventDefault(); // 폼의 기본 제출 동작을 막습니다
+<footer th:replace="~{fragment/footer :: footer(~{::js})}">
+    <th:block th:fragment="js">
+        <script src="/js/editForm.js"></script>
 
-        if(confirm("수정하시겠습니까?")) {
-            const postId = [[${post.id}]];
-            const titleValue = document.getElementById('title').value;
-            const bodyValue = document.getElementById('body').value;
+    </th:block>
+</footer>
 
-            fetch(`/noticeBoard/posts/${postId}`, {
-                method: "PATCH",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({
-                    id: postId,
-                    title: titleValue,
-                    body: bodyValue
-                })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(errorData => Promise.reject(errorData));
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    alert("글이 성공적으로 수정되었습니다.");
-                    window.location.href = `/noticeBoard/posts/${postId}`;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    if (error.errorDetails && error.errorDetails.length > 0) {
-                        error.errorDetails.forEach(err => {
-                            let errorDiv = document.querySelector(`.field-error.${err.field}`);
-                            let errorInput = document.querySelector(`.form-control.${err.field}`);
-                            if (errorDiv) {
-                                errorDiv.textContent = err.message;
-                                errorInput.classList.add("field-error");
-                            }
-                        });
-                    } else {
-                        alert('글 저장 중 오류가 발생했습니다: ' + (error.message || '알 수 없는 오류'));
-                    }
-                });
-        }
-    });
-</script>
 </body>
 </html>
