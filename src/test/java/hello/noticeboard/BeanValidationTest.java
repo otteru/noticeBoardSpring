@@ -1,6 +1,6 @@
 package hello.noticeboard;
 
-import hello.noticeboard.post.Post;
+import hello.noticeboard.domain.post.Post;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

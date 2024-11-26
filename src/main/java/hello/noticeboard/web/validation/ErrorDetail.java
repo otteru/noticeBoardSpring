@@ -1,4 +1,4 @@
-package hello.noticeboard.validation;
+package hello.noticeboard.web.validation;
 
 import lombok.Builder;
 import lombok.Getter;

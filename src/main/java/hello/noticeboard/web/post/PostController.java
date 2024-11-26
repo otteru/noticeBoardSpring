@@ -1,11 +1,10 @@
-package hello.noticeboard.controller;
+package hello.noticeboard.web.post;
 
-import hello.noticeboard.validation.ErrorResult;
-import hello.noticeboard.validation.PostValidator;
-import hello.noticeboard.post.Post;
-import hello.noticeboard.post.PostRepository;
-import hello.noticeboard.validation.form.PostEditForm;
-import hello.noticeboard.validation.form.PostSaveForm;
+import hello.noticeboard.web.validation.ErrorResult;
+import hello.noticeboard.domain.post.Post;
+import hello.noticeboard.domain.post.PostRepository;
+import hello.noticeboard.web.post.form.PostEditForm;
+import hello.noticeboard.web.post.form.PostSaveForm;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +25,7 @@ import java.util.Map;
 @Controller// 컨트롤러로 등록해준다.
 @RequestMapping("/noticeBoard/posts")
 @RequiredArgsConstructor //final 필드, @NonNull 필드 생성자 자동 생성
-public class MyController {
+public class PostController {
 
     private final PostRepository postRepository;
     //private final PostValidator postValidator;
@@ -38,11 +36,11 @@ public class MyController {
     //    dataBinder.addValidators(postValidator);
     //}
 
-    @GetMapping
+    //@GetMapping
     public String home(Model model) {
         List<Post> posts = postRepository.findAll();
         model.addAttribute("posts", posts);
-        return "posts";
+        return "posts/posts";
     }
 
     // read
@@ -51,14 +49,14 @@ public class MyController {
         Post post = postRepository.findById(id);
         log.info("Read Post={}", post);
         model.addAttribute("post", post);
-        return "post";
+        return "posts/post";
     }
 
     //  add
     @GetMapping("/add")
     public String addForm(Model model) {
         model.addAttribute("post", new Post());
-        return "addForm";
+        return "posts/addPostForm";
     }
 
     @PostMapping
@@ -90,7 +88,7 @@ public class MyController {
 
         Post post = postRepository.findById(id);
         model.addAttribute("post", post);
-        return "editForm";
+        return "posts/editPostForm";
     }
 
     @PatchMapping("/{id}")

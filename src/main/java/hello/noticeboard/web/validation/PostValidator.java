@@ -1,6 +1,6 @@
-package hello.noticeboard.validation;
+package hello.noticeboard.web.validation;
 
-import hello.noticeboard.post.Post;
+import hello.noticeboard.domain.post.Post;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;

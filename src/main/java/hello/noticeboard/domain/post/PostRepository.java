@@ -1,4 +1,4 @@
-package hello.noticeboard.post;
+package hello.noticeboard.domain.post;
 
 import org.springframework.stereotype.Repository;
 

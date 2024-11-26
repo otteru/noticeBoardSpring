@@ -1,11 +1,11 @@
 package hello.noticeboard.post;
 
-import org.assertj.core.api.Assertions;
+import hello.noticeboard.domain.post.Post;
+import hello.noticeboard.domain.post.PostRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class PostRepositoryTest {
 

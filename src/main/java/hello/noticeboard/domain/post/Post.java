@@ -1,4 +1,4 @@
-package hello.noticeboard.post;
+package hello.noticeboard.domain.post;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
