@@ -31,12 +31,7 @@ public class PostController {
     //private final PostValidator postValidator;
     private final MessageSource messageSource;
 
-    //@InitBinder
-    //public void initBinder(WebDataBinder dataBinder) {
-    //    dataBinder.addValidators(postValidator);
-    //}
-
-    //@GetMapping
+    @GetMapping
     public String home(Model model) {
         List<Post> posts = postRepository.findAll();
         model.addAttribute("posts", posts);
@@ -127,14 +122,5 @@ public class PostController {
     public ResponseEntity<?> deletePost(@PathVariable("id") Long id) {
         postRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    // test data
-    @PostConstruct
-    public void init() {
-        postRepository.save(new Post("Silver Linings Playbook", "The only way you can beat my crazy was by doing something crazy yourself. " +
-                "Thank you. I love you. I knew it the minute I met you. I'm sorry it took so long for me to catch up. I just got stuck."));
-        postRepository.save(new Post("Intern", "Ben: \"You're never wrong to do the right thing.\" " +
-                "Jules: Who said that, you? Ben: Yeah. But I'm pretty sure Mark Twain said it first."));
     }
 }
