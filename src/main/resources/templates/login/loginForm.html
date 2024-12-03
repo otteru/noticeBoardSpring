@@ -19,28 +19,26 @@
     <div class="py-5 text-center">
         <h2>로그인</h2>
     </div>
-    <form action="item.html" th:action th:object="${loginForm}" method="post">
+    <form id="loginForm" action="item.html" th:action th:object="${loginForm}" method="post">
         <div th:if="${#fields.hasGlobalErrors()}">
             <p class="field-error" th:each="err : ${#fields.globalErrors()}"
                th:text="${err}">전체 오류 메시지</p>
         </div>
         <div>
             <label for="loginId">로그인 ID</label>
-            <input type="text" id="loginId" th:field="*{loginId}" class="formcontrol"
-                   th:errorclass="field-error">
-            <div class="field-error" th:errors="*{loginId}" />
+            <input type="text" id="loginId" th:field="*{loginId}" class="form-control loginId">
+            <div class="error-message loginId"/>
         </div>
         <div>
             <label for="password">비밀번호</label>
-            <input type="password" id="password" th:field="*{password}"
-                   class="form-control"
-                   th:errorclass="field-error">
-            <div class="field-error" th:errors="*{password}" />
+            <input type="password" id="password" th:field="*{password}" class="form-control password">
+            <div class="error-message password" />
         </div>
         <hr class="my-4">
         <div class="row">
             <div class="col">
-                <button class="w-100 btn btn-primary btn-lg" type="submit">로그인
+                <button class="w-100 btn btn-primary btn-lg"
+                        type="submit">로그인
                 </button>
             </div>
             <div class="col">
@@ -52,5 +50,12 @@
         </div>
     </form>
 </div> <!-- /container -->
+
+<footer th:replace="~{fragment/footer :: footer(~{::js})}">
+    <th:block th:fragment="js">
+        <script src="/js/login/loginForm.js"></script>
+    </th:block>
+</footer>
+
 </body>
 </html>

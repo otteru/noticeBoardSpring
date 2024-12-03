@@ -1,67 +1,48 @@
-    <!DOCTYPE HTML>
-    <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <title th:text="${post.title}">게시글</title>
-        <link th:href="@{/css/bootstrap.min.css}"
-              href="../css/bootstrap.min.css" rel="stylesheet">
-        <!-- jQuery 추가 -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    </head>
-    <body>
-    <div class="container" style="max-width: 600px">
-        <div class="py-5 text-center">
-            <h2 th:text="${post.title}">글 제목</h2>
-        </div>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${post.title}">게시글</title>
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .button-group {
+            display: flex;
+            align-items: center;
+        }
+        .button-group form {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container" style="max-width: 600px">
+    <div class="py-5 text-center">
+        <h2 th:text="${post.title}">글 제목</h2>
+    </div>
 
-        <h2 th:if="${param.status}" th:text="'저장 완료'"></h2>
+    <h2 th:if="${param.status}" th:text="'저장 완료'"></h2>
 
-        <div class="mb-4">
-            <p th:text="${post.body}" class="lead">글 내용</p>
-        </div>
+    <div class="mb-4">
+        <p th:text="${post.body}" class="lead">글 내용</p>
+    </div>
 
-        <hr class="my-4">
+    <hr class="my-4">
 
-        <div class="row">
-            <div class="col">
-                <div class="float-end">
-                    <a th:href="@{/noticeBoard/posts}" class="btn btn-secondary me-2" th:text="#{button.back}">돌아가기</a>
-                    <a th:href="@{/noticeBoard/posts/edit/{id}(id=${post.id})}" class="btn btn-primary me-2" th:text="#{button.edit}">글 수정</a>
-                    <!-- 삭제 버튼 수정 -->
-                    <button class="btn btn-danger"
-                            th:onclick= "deletePost([[${post.id}]])"
-                            type="button"
-                            th:text="#{button.delete}">글 삭제
-                    </button>
-                </div>
+    <div class="row">
+        <div class="col">
+            <div class="float-end button-group">
+                <a th:href="@{/noticeBoard/posts}" class="btn btn-secondary me-2" th:text="#{button.back}">돌아가기</a>
+                <a th:href="@{/noticeBoard/posts/edit/{id}(id=${post.id})}" class="btn btn-primary me-2" th:text="#{button.edit}">글 수정</a>
+                <form th:action="@{/noticeBoard/posts/{id}(id=${post.id})}" th:method="delete" class="d-inline">
+                    <button class="btn btn-danger" type="submit" th:text="#{button.delete}">글 삭제</button>
+                </form>
             </div>
         </div>
     </div>
-
-<!--삭제 작업은 데이터를 제출하는 것이 아니라 서버에 특정 리소스를 삭제하라는 요청을 보내는 것이므로, AJAX만으로 처리-->
-    <script th:inline="javascript">
-        function deletePost(postId) {
-            if(confirm("정말로 이 글을 삭제하시겠습니까?")) {
-                fetch(`/noticeBoard/posts/${postId}`, {
-                    method: "DELETE"
-                })
-                    .then(response => {
-                        if(!response.ok) {
-                            throw new Error("서버 응답이 실패했습니다.");
-                        }
-                        return response.text();
-                    })
-                    .then(() => {
-                        alert("글이 성공적으로 삭제되었습니다.");
-                        window.location.href = '/noticeBoard/posts'; // 성공 시 리다이렉트
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('글 삭제 중 오류가 발생했습니다: ' + error.message);
-                    });
-            }
-        }
-    </script>
-    </body>
-    </html>
+</div>
+</body>
+</html>
 

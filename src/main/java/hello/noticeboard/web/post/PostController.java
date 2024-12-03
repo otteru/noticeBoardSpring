@@ -57,14 +57,14 @@ public class PostController {
     @PostMapping
     public ResponseEntity<?> addPost(@Validated @RequestBody PostSaveForm form, BindingResult bindingResult) {
 
-        log.info("add Post with title={}", form.getTitle());
+        //log.info("add Post with title={}", form.getTitle());
 
         // 검증에 실패하면 다시 입력 폼으로 back
         if(bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult);
+            //log.info("errors={}", bindingResult);
             ErrorResult errorResult = new ErrorResult(bindingResult, messageSource, Locale.getDefault());
 
-            log.info("errorResult={}", errorResult);
+            //log.info("errorResult={}", errorResult);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
         }
 
@@ -119,8 +119,8 @@ public class PostController {
 
     // delete
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePost(@PathVariable("id") Long id) {
+    public String deletePost(@PathVariable("id") Long id) {
         postRepository.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return "redirect:/noticeBoard/posts";
     }
 }
