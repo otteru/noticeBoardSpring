@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -45,15 +47,16 @@ public class LoginController {
 
         if(bindingResult.hasErrors()) {
             ErrorResult errorResult = new ErrorResult(bindingResult, messageSource, Locale.getDefault());
-            log.info("errorResult1={}", errorResult);
+            log.info("errorResult1={}", errorResult.getErrorDetails());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
         }
 
         Member loginMember = loginService.login(form.getLoginId(), form.getPassword());
 
         if(loginMember == null) {
+            bindingResult.addError(new ObjectError("loginMember", "아이디 또는 비밀번호를 다시 확인해주십세요."));
             ErrorResult errorResult = new ErrorResult(bindingResult, messageSource, Locale.getDefault());
-            log.info("errorResult2={}", errorResult);
+            log.info("errorResult2={}", errorResult.getErrorDetails());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
         }
 

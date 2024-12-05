@@ -19,11 +19,10 @@
     <div class="py-5 text-center">
         <h2>로그인</h2>
     </div>
+    <!-- div 닫힘 안해주면 global form 형태가 다 날라가고 오류 메세지만 남는다.-->
+    <div class="global-error"></div>
     <form id="loginForm" action="item.html" th:action th:object="${loginForm}" method="post">
-        <div th:if="${#fields.hasGlobalErrors()}">
-            <p class="field-error" th:each="err : ${#fields.globalErrors()}"
-               th:text="${err}">전체 오류 메시지</p>
-        </div>
+
         <div>
             <label for="loginId">로그인 ID</label>
             <input type="text" id="loginId" th:field="*{loginId}" class="form-control loginId">

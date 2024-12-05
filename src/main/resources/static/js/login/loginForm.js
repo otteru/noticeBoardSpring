@@ -31,21 +31,28 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
             console.error('Error:', error);
             if (error.errorDetails && error.errorDetails.length > 0) {
                 error.errorDetails.forEach(err => {
-                    let errorDiv = document.querySelector(`.error-message.${err.field}`);
-                    let errorInput = document.querySelector(`.form-control.${err.field}`);
-                    if (errorDiv) {
-                        //console.log('errorDiv: ', errorDiv);
-                        //console.log('errorInput: ', errorInput);
-                        errorDiv.textContent = err.message;
-                        errorDiv.classList.add("field-error");
-                        errorInput.classList.add("field-error");
+                    console.log(err.field);
+                    if(err.field) { // 필드 오류 처리
+                        let errorDiv = document.querySelector(`.error-message.${err.field}`);
+                        let errorInput = document.querySelector(`.form-control.${err.field}`);
+                        if (errorDiv) {
+                            //console.log('errorDiv: ', errorDiv);
+                            //console.log('errorInput: ', errorInput);
+                            errorDiv.textContent = err.message;
+                            errorDiv.classList.add("field-error");
+                            errorInput.classList.add("field-error");
+                        }
+                    } else { // 글로벌 오류 처리
+                        console.log("global error");
+                        let errorDiv = document.querySelector(`.global-error`);
+                        if(errorDiv) {
+                            errorDiv.textContent = err.message;
+                            errorDiv.classList.add("field-error");
+                        }
                     }
                 });
             } else {
                 alert('글 저장 중 오류가 발생했습니다: ' + (error.message || '알 수 없는 오류'));
             }
         });
-
-
-
 });
