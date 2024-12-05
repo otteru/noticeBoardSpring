@@ -9,13 +9,14 @@
 <body>
 <div class="container" style="max-width: 600px">
     <div class="py-5 text-center">
-        <h2>홈 화면</h2>
+        <h2 th:text="#{page.home}">홈 화면</h2>
     </div>
     <div class="row">
         <div class="col">
             <button class="w-100 btn btn-secondary btn-lg"
                     type="button"
-                    th:onclick="|location.href='@{/members/add}'|">
+                    th:onclick="|location.href='@{/members/add}'|"
+                    th:text="#{page.signUp}">
                 회원가입
             </button>
         </div>
@@ -23,7 +24,8 @@
             <button class="w-100 btn btn-dark btn-lg"
                     type="button"
                     onclick="location.href='posts.html'"
-                    th:onclick="|location.href='@{/login}'|" >
+                    th:onclick="|location.href='@{/login}'|"
+                    th:text="#{page.login}">
                 로그인
             </button>
         </div>
