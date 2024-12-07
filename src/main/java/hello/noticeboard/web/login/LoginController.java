@@ -19,10 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
 import java.util.Map;
@@ -41,9 +38,12 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Validated @RequestBody LoginForm form, BindingResult bindingResult, HttpServletRequest request) {
+    public ResponseEntity<?> login(@Validated @RequestBody LoginForm form, BindingResult bindingResult,
+                                   @RequestParam(name = "redirectURL", defaultValue = "/") String redirectURL, HttpServletRequest request) {
 
         log.info("form={}", form);
+
+        log.info("redirectURL={}", redirectURL);
 
         if(bindingResult.hasErrors()) {
             ErrorResult errorResult = new ErrorResult(bindingResult, messageSource, Locale.getDefault());
@@ -65,7 +65,7 @@ public class LoginController {
         // 서버 sessionStore에 session을 등록
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
 
-        return ResponseEntity.ok().body(Map.of("success", true));
+        return ResponseEntity.ok().body(Map.of("redirect", redirectURL));
     }
 
     //AJAX를 사용하여 로그아웃을 구현할 수도 있지만, 현재 구현에 비해 특별한 이점이 없다.

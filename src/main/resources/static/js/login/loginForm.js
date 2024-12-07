@@ -4,10 +4,17 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     const loginId = document.getElementById('loginId').value;
     const password = document.getElementById('password').value;
 
+    // 현재 URL에서 redirectURL 파라미터 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectURL = urlParams.get('redirectURL') || '/';
+
     // 기존 에러 메시지 초기화
     document.querySelectorAll('.field-error').forEach(el => el.textContent = '');
 
-    fetch("/login", {
+    // URLSearchParams 객체를 사용하여 쿼리 파라미터 구성
+    const queryParams = new URLSearchParams({redirectURL: redirectURL});
+
+    fetch(`/login?${queryParams}`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -25,7 +32,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
             return response.json();
         })
         .then(data => {
-            window.location.href = `/`;
+            window.location.href = data.redirect;
         })
         .catch(error => {
             console.error('Error:', error);
