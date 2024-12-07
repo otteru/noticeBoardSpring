@@ -2,6 +2,7 @@ package hello.noticeboard.web;
 
 import hello.noticeboard.domain.member.Member;
 import hello.noticeboard.domain.member.MemberRepository;
+import hello.noticeboard.web.login.arguementResolver.Login;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ public class HomeController {
     private final MemberRepository memberRepository;
 
     @GetMapping("/")
-    public String homeLogin(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember, Model model) {
+    public String homeLogin(@Login Member loginMember, Model model) {
 
         if(loginMember == null) {
             return "home";
