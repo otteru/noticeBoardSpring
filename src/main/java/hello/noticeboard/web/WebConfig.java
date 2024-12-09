@@ -1,5 +1,6 @@
 package hello.noticeboard.web;
 
+import hello.noticeboard.web.exception.interceptor.LogInterceptor;
 import hello.noticeboard.web.exception.interceptor.LoginCheckInterceptor;
 import hello.noticeboard.web.login.arguementResolver.LoginMemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
@@ -15,15 +16,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new LogInterceptor())
-//                .order(1)
-//                .addPathPatterns("/**")
-//                .excludePathPatterns("/css/**", "*.ico", "/error", "/error-page/**");
-
-        registry.addInterceptor(new LoginCheckInterceptor())
+        registry.addInterceptor(new LogInterceptor())
                 .order(1)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/", "/members/add", "/login", "/logout","/css/**","/js/**", "/*ico", "/error");
+                .excludePathPatterns("/css/**", "*.ico", "/error", "/error-page/**");
+
+        registry.addInterceptor(new LoginCheckInterceptor())
+                .order(2)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/", "/members/add", "/login", "/logout","/css/**","/js/**", "/*ico", "/error", "/error-page/**");
     }
 
     @Override
