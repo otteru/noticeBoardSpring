@@ -1,11 +1,11 @@
 package hello.noticeboard.web.post;
 
+import hello.noticeboard.web.exception.api.PostNotFoundException;
 import hello.noticeboard.web.validation.ErrorResult;
 import hello.noticeboard.domain.post.Post;
 import hello.noticeboard.domain.post.PostRepository;
 import hello.noticeboard.web.post.form.PostEditForm;
 import hello.noticeboard.web.post.form.PostSaveForm;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -42,6 +42,11 @@ public class PostController {
     @GetMapping("/{id}")
     public String post(@PathVariable("id") Long id, Model model) {
         Post post = postRepository.findById(id);
+
+        if(post == null) {
+            throw new PostNotFoundException("게시글을 찾을 수 없습니다: " + id);
+        }
+
         log.info("Read Post={}", post);
         model.addAttribute("post", post);
         return "posts/post";
